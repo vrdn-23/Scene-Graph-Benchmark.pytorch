@@ -6,7 +6,7 @@ import copy
 
 
 class DatasetCatalog(object):
-    DATA_DIR = "datasets"
+    DATA_DIR = "/sg/datasets"
     DATASETS = {
         "coco_2017_train": {
             "img_dir": "coco/train2017",
@@ -117,6 +117,12 @@ class DatasetCatalog(object):
             "dict_file": "vg/VG-SGG-dicts-with-attri.json",
             "image_file": "vg/image_data.json",
         },
+        "vinay": {
+            "img_dir": "vg/images",
+            "roidb_file": "vg/VG-SGG-GQA-with-attri-comb.h5",
+            "dict_file": "vg/VG-SGG-GQA-dicts-with-attri.json",
+            "image_file": "vg/comb_image_data.json",
+        },
     }
 
     @staticmethod
@@ -147,11 +153,37 @@ class DatasetCatalog(object):
             # name should be something like VG_stanford_filtered_train
             p = name.rfind("_")
             name, split = name[:p], name[p+1:]
+            print("name is ****************", name)
+            print("split is ****************", split)
             assert name in DatasetCatalog.DATASETS and split in {'train', 'val', 'test'}
             data_dir = DatasetCatalog.DATA_DIR
             args = copy.deepcopy(DatasetCatalog.DATASETS[name])
             for k, v in args.items():
                 args[k] = os.path.join(data_dir, v)
+            args['split'] = split
+            # IF MODEL.RELATION_ON is True, filter images with empty rels
+            # else set filter to False, because we need all images for pretraining detector
+            args['filter_non_overlap'] = (not cfg.MODEL.ROI_RELATION_HEAD.USE_GT_BOX) and cfg.MODEL.RELATION_ON and cfg.MODEL.ROI_RELATION_HEAD.REQUIRE_BOX_OVERLAP
+            args['filter_empty_rels'] = cfg.MODEL.RELATION_ON
+            args['flip_aug'] = cfg.MODEL.FLIP_AUG
+            args['custom_eval'] = cfg.TEST.CUSTUM_EVAL
+            args['custom_path'] = cfg.TEST.CUSTUM_PATH
+            return dict(
+                factory="VGDataset",
+                args=args,
+            )
+        elif ("vinay" in name):
+            # name should be something like VG_stanford_filtered_train
+            p = name.rfind("_")
+            name, split = name[:p], name[p+1:]
+            print("name is ****************", name)
+            print("split is ****************", split)
+            assert name in DatasetCatalog.DATASETS and split in {'train', 'val', 'test'}
+            data_dir = DatasetCatalog.DATA_DIR
+            args = copy.deepcopy(DatasetCatalog.DATASETS[name])
+            for k, v in args.items():
+                args[k] = os.path.join(data_dir, v)
+            print("path is ", args)
             args['split'] = split
             # IF MODEL.RELATION_ON is True, filter images with empty rels
             # else set filter to False, because we need all images for pretraining detector

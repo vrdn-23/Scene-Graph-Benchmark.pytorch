@@ -131,7 +131,7 @@ class Pooler(nn.Module):
                 rois_per_level = rois[idx_in_level]
                 result[idx_in_level] = pooler(per_level_feature, rois_per_level).to(dtype)
         if self.cat_all_levels:
-            result = self.reduce_channel(result)
+            result = self.reduce_channel(result.contiguous())
         return result
 
 

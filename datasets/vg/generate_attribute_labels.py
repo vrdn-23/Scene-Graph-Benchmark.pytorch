@@ -33,9 +33,9 @@ vg_sgg = h5py.File('VG-SGG.h5', 'r')
 # objects.json from https://visualgenome.org/static/data/dataset/objects_v1_2.json.zip
 # attributes.json from https://visualgenome.org/static/data/dataset/attributes.json.zip
 # attribute_synsets.json from https://visualgenome.org/static/data/dataset/attribute_synsets.json.zip
-original_objects = json.load(open("objects.json"))
+# original_objects = json.load(open("objects.json"))
 original_attributes = json.load(open("attributes.json"))
-original_attribute_synsets = json.load(open("attribute_synsets.json"))
+# original_attribute_synsets = json.load(open("attribute_synsets.json"))
 
 
 # In[4]:
@@ -551,7 +551,7 @@ def show_wrong_image(wrong_idx, vg_sgg, image_info):
     wrong_boxes[:, :2] = wrong_boxes[:, :2] - wrong_boxes[:, 2:] / 2
     wrong_boxes[:, 2:] = wrong_boxes[:, :2] + wrong_boxes[:, 2:]
     wrong_boxes = wrong_boxes.astype(np.float) / USE_BOX_SIZE * max(image_info[wrong_idx]['height'], image_info[wrong_idx]['width'])
-    
+
     return draw_boxes(image_info[wrong_idx]['image_id'], wrong_boxes)
 
 

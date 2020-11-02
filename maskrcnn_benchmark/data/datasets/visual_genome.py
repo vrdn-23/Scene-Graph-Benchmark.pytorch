@@ -17,7 +17,7 @@ BOX_SCALE = 1024  # Scale at which we have the boxes
 class VGDataset(torch.utils.data.Dataset):
 
     def __init__(self, split, img_dir, roidb_file, dict_file, image_file, transforms=None,
-                filter_empty_rels=True, num_im=-1, num_val_im=5000,
+                filter_empty_rels=True, num_im=-1, num_val_im=4,
                 filter_duplicate_rels=True, filter_non_overlap=True, flip_aug=False, custom_eval=False, custom_path=''):
         """
         Torch dataset for VisualGenome
@@ -294,7 +294,7 @@ def load_image_filenames(img_dir, image_file):
     with open(image_file, 'r') as f:
         im_data = json.load(f)
 
-    corrupted_ims = ['1592.jpg', '1722.jpg', '4616.jpg', '4617.jpg']
+    corrupted_ims = []
     fns = []
     img_info = []
     for i, img in enumerate(im_data):
@@ -306,8 +306,8 @@ def load_image_filenames(img_dir, image_file):
         if os.path.exists(filename):
             fns.append(filename)
             img_info.append(img)
-    assert len(fns) == 108073
-    assert len(img_info) == 108073
+    # assert len(fns) == 108073
+    # assert len(img_info) == 108073
     return fns, img_info
 
 

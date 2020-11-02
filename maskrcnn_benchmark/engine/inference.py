@@ -64,7 +64,7 @@ def _accumulate_predictions_from_multiple_gpus(predictions_per_gpu, synchronize_
         predictions = {}
         for p in all_predictions:
             predictions.update(p)
-    
+
     # convert a dict where the key is the index in a list
     image_ids = list(sorted(predictions.keys()))
     if len(image_ids) != image_ids[-1] + 1:
@@ -144,7 +144,7 @@ def inference(
 
     if cfg.TEST.CUSTUM_EVAL:
         detected_sgg = custom_sgg_post_precessing(predictions)
-        with open(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_prediction.json'), 'w') as outfile:  
+        with open(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_prediction.json'), 'w') as outfile:
             json.dump(detected_sgg, outfile)
         print('=====> ' + str(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_prediction.json')) + ' SAVED !')
         return -1.0
@@ -196,7 +196,7 @@ def custom_sgg_post_precessing(predictions):
         current_dict['rel_all_scores'] = rel_all_scores
         output_dict[idx] = current_dict
     return output_dict
-    
+
 def get_sorted_bbox_mapping(score_list):
     sorted_scoreidx = sorted([(s, i) for i, s in enumerate(score_list)], reverse=True)
     sorted2id = [item[1] for item in sorted_scoreidx]
