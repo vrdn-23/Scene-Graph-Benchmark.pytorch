@@ -94,6 +94,7 @@ MODEL:
       VAL_DIM: 64
       INNER_DIM: 2048 
 DATASETS:
+  DATA_STR: ''
   TRAIN: ("VG_stanford_filtered_with_attribute_train",)
   VAL: ("VG_stanford_filtered_with_attribute_val",)
   TEST: ("VG_stanford_filtered_with_attribute_test",)
