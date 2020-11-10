@@ -291,6 +291,8 @@ def load_image_filenames(img_dir, image_file):
     Return: 
         List of filenames corresponding to the good images
     """
+    print(f"Image_file json {image_file}")
+    print(f"Image dir json {img_dir}")
     with open(image_file, 'r') as f:
         im_data = json.load(f)
 

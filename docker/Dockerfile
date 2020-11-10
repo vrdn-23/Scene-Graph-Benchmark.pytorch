@@ -18,23 +18,10 @@ ENV PATH=/miniconda/bin:$PATH
 
 RUN conda update -y conda
 
-# Create a Python 3.6 environment
-RUN conda install -y conda-build \
- && conda create -y --name py36 python=3.6.7 \
- && conda clean -ya
+COPY environment.yml .
+RUN conda env create -f environment.yml
 
-ENV CONDA_DEFAULT_ENV=py36
-ENV CONDA_PREFIX=/miniconda/envs/$CONDA_DEFAULT_ENV
-ENV PATH=$CONDA_PREFIX/bin:$PATH
-ENV CONDA_AUTO_UPDATE_CONDA=false
-
-RUN conda install -y ipython scipy h5py
-RUN pip install requests ninja yacs cython matplotlib opencv-python tqdm overrides
-
-# Install PyTorch 1.0 Nightly
-ARG CUDA
-RUN conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=${CUDA} -c pytorch \
- && conda clean -ya
+SHELL ["conda", "run", "-n", "scene_graph_benchmark", "/bin/bash", "-c"]
 
 # install pycocotools
 RUN git clone https://github.com/cocodataset/cocoapi.git \
@@ -46,9 +33,12 @@ RUN git clone https://github.com/NVIDIA/apex.git \
  && cd apex \
  && python setup.py install --cuda_ext --cpp_ext
 
-# install PyTorch Detection
-RUN git clone https://github.com/KaihuaTang/Scene-Graph-Benchmark.pytorch.git \
- && cd Scene-Graph-Benchmark.pytorch \
+#install PyTorch Detection
+#ARG FORCE_CUDA="1"
+#ENV FORCE_CUDA=${FORCE_CUDA}
+#ENV TORCH_CUDA_ARCH_LIST="Kepler;Kepler+Tesla;Maxwell;Maxwell+Tegra;Pascal;Volta;Turing"
+RUN git clone https://github.com/vrdn-23/Scene-Graph-Benchmark.pytorch.git sg_docker \
+ && cd sg_docker \
  && python setup.py build develop
 
-WORKDIR /Scene-Graph-Benchmark.pytorch
+WORKDIR /

@@ -42,7 +42,7 @@ MODEL:
     POOLER_SAMPLING_RATIO: 2
     FEATURE_EXTRACTOR: "FPN2MLPFeatureExtractor"
     PREDICTOR: "FPNPredictor"
-    NUM_CLASSES: 1702                # 151 for VG, 1201 for GQA
+    NUM_CLASSES: 151                # 151 for VG, 1201 for GQA
     MLP_HEAD_DIM: 4096
   ROI_ATTRIBUTE_HEAD:
     FEATURE_EXTRACTOR: "FPN2MLPFeatureExtractor"
@@ -50,7 +50,7 @@ MODEL:
     USE_BINARY_LOSS: True           # choose binary, because cross_entropy loss deteriorate the box head, even with 0.1 weight
     POS_WEIGHT: 50.0
     ATTRIBUTE_LOSS_WEIGHT: 1.0
-    NUM_ATTRIBUTES: 618             # 201 for VG, 501 for GQA
+    NUM_ATTRIBUTES: 201             # 201 for VG, 501 for GQA
     MAX_ATTRIBUTES: 10             
     ATTRIBUTE_BGFG_SAMPLE: True    
     ATTRIBUTE_BGFG_RATIO: 3        
@@ -59,7 +59,7 @@ MODEL:
     USE_GT_OBJECT_LABEL: False
     REQUIRE_BOX_OVERLAP: False              # for sgdet, during training, only train pairs with overlap
     ADD_GTBOX_TO_PROPOSAL_IN_TRAIN: True    # for sgdet only, in case some gt boxes are missing
-    NUM_CLASSES: 311                # 51 for VG, 201 for GQA (not contain "to the left of" & "to the right of")
+    NUM_CLASSES: 51                # 51 for VG, 201 for GQA (not contain "to the left of" & "to the right of")
     BATCH_SIZE_PER_IMAGE: 1024      # sample as much as possible
     POSITIVE_FRACTION: 0.25
     CONTEXT_POOLING_DIM: 4096
@@ -94,9 +94,9 @@ MODEL:
       VAL_DIM: 64
       INNER_DIM: 2048 
 DATASETS:
-  TRAIN: ("vinay_train",)
-  VAL: ("vinay_val",)
-  TEST: ("vinay_val",)
+  TRAIN: ("VG_stanford_filtered_with_attribute_train",)
+  VAL: ("VG_stanford_filtered_with_attribute_val",)
+  TEST: ("VG_stanford_filtered_with_attribute_test",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
@@ -111,7 +111,7 @@ SOLVER:
   VAL_PERIOD: 2000
   CHECKPOINT_PERIOD: 2000
   PRINT_GRAD_FREQ: 4000
-  IMS_PER_BATCH: 2
+  IMS_PER_BATCH: 8
   SCHEDULE:
     # the following paramters are only used for WarmupReduceLROnPlateau
     TYPE: "WarmupMultiStepLR"    # WarmupMultiStepLR, WarmupReduceLROnPlateau
@@ -122,7 +122,7 @@ SOLVER:
     MAX_DECAY_STEP: 3
 OUTPUT_DIR: './output/relation_baseline'
 TEST:
-  IMS_PER_BATCH: 2
+  IMS_PER_BATCH: 8
   ALLOW_LOAD_FROM_CACHE: False
   RELATION:
     SYNC_GATHER: True      # turn on will slow down the evaluation to solve the sgdet test out of memory problem
