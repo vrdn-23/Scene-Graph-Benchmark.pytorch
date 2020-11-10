@@ -10,35 +10,29 @@ RUN apt-get update -y \
  && apt-get install -y apt-utils git curl ca-certificates bzip2 cmake tree htop bmon iotop g++ \
  && apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx ffmpeg
 
-# Install Miniconda
-RUN curl -LO https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-RUN bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b
-RUN rm Miniconda3-latest-Linux-x86_64.sh
-ENV PATH=/miniconda/bin:$PATH
+RUN apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt-get install -y python3-pip
 
-RUN conda update -y conda
+RUN apt-get update -y
+RUN pip3 install --upgrade pip
+RUN pip3 install scipy h5py ipython ninja yacs cython matplotlib tqdm opencv-python overrides
 
-COPY environment.yml .
-RUN conda env create -f environment.yml
+RUN pip3 install torch==1.4.0 torchvision==0.5.0
 
-SHELL ["conda", "run", "-n", "scene_graph_benchmark", "/bin/bash", "-c"]
+RUN git clone https://github.com/cocodataset/cocoapi.git && git clone https://github.com/NVIDIA/apex.git && git clone https://github.com/vrdn-23/Scene-Graph-Benchmark.pytorch.git sg_docker
 
 # install pycocotools
-RUN git clone https://github.com/cocodataset/cocoapi.git \
- && cd cocoapi/PythonAPI \
- && python setup.py build_ext install
+RUN cd cocoapi/PythonAPI \
+ && python3 setup.py build_ext install
 
 # install apex
-RUN git clone https://github.com/NVIDIA/apex.git \
- && cd apex \
- && python setup.py install --cuda_ext --cpp_ext
+RUN cd apex \
+ && python3 setup.py install --cuda_ext --cpp_ext
 
 #install PyTorch Detection
 #ARG FORCE_CUDA="1"
 #ENV FORCE_CUDA=${FORCE_CUDA}
 #ENV TORCH_CUDA_ARCH_LIST="Kepler;Kepler+Tesla;Maxwell;Maxwell+Tegra;Pascal;Volta;Turing"
-RUN git clone https://github.com/vrdn-23/Scene-Graph-Benchmark.pytorch.git sg_docker \
- && cd sg_docker \
- && python setup.py build develop
+RUN cd sg_docker \
+ && python3 setup.py build develop
 
-WORKDIR /
+WORKDIR /sg_docker
