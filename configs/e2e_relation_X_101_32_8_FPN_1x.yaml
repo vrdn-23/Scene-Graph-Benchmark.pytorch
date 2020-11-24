@@ -5,9 +5,9 @@ INPUT:
   MAX_SIZE_TEST: 1000
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/FAIR/20171220/X-101-32x8d"
+  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
   BACKBONE:
-    CONV_BODY: "R-101-FPN" # VGG-16
+    CONV_BODY: "R-50-FPN" # VGG-16
   RESNETS:
     BACKBONE_OUT_CHANNELS: 256
     STRIDE_IN_1X1: False
@@ -42,27 +42,27 @@ MODEL:
     POOLER_SAMPLING_RATIO: 2
     FEATURE_EXTRACTOR: "FPN2MLPFeatureExtractor"
     PREDICTOR: "FPNPredictor"
-    NUM_CLASSES: 151                # 151 for VG, 1201 for GQA
-    MLP_HEAD_DIM: 4096
+    NUM_CLASSES: 1702               # 151 for VG, 1201 for GQA
+    MLP_HEAD_DIM: 1024
   ROI_ATTRIBUTE_HEAD:
     FEATURE_EXTRACTOR: "FPN2MLPFeatureExtractor"
     PREDICTOR: "FPNPredictor"
     USE_BINARY_LOSS: True           # choose binary, because cross_entropy loss deteriorate the box head, even with 0.1 weight
     POS_WEIGHT: 50.0
     ATTRIBUTE_LOSS_WEIGHT: 1.0
-    NUM_ATTRIBUTES: 201             # 201 for VG, 501 for GQA
-    MAX_ATTRIBUTES: 10             
-    ATTRIBUTE_BGFG_SAMPLE: True    
-    ATTRIBUTE_BGFG_RATIO: 3        
+    NUM_ATTRIBUTES: 618             # 201 for VG, 501 for GQA
+    MAX_ATTRIBUTES: 10
+    ATTRIBUTE_BGFG_SAMPLE: True
+    ATTRIBUTE_BGFG_RATIO: 3
   ROI_RELATION_HEAD:
     USE_GT_BOX: False
     USE_GT_OBJECT_LABEL: False
     REQUIRE_BOX_OVERLAP: False              # for sgdet, during training, only train pairs with overlap
     ADD_GTBOX_TO_PROPOSAL_IN_TRAIN: True    # for sgdet only, in case some gt boxes are missing
-    NUM_CLASSES: 51                # 51 for VG, 201 for GQA (not contain "to the left of" & "to the right of")
+    NUM_CLASSES: 311                # 51 for VG, 201 for GQA (not contain "to the left of" & "to the right of")
     BATCH_SIZE_PER_IMAGE: 1024      # sample as much as possible
     POSITIVE_FRACTION: 0.25
-    CONTEXT_POOLING_DIM: 4096
+    CONTEXT_POOLING_DIM: 1024
     CONTEXT_HIDDEN_DIM: 512         #1024 for VCTree
     POOLING_ALL_LEVELS: True
     LABEL_SMOOTHING_LOSS: False
@@ -92,11 +92,11 @@ MODEL:
       NUM_HEAD: 8
       KEY_DIM: 64
       VAL_DIM: 64
-      INNER_DIM: 2048 
+      INNER_DIM: 2048
 DATASETS:
-  TRAIN: ("VG_stanford_filtered_with_attribute_train",)
-  VAL: ("VG_stanford_filtered_with_attribute_val",)
-  TEST: ("VG_stanford_filtered_with_attribute_test",)
+  TRAIN: ("GQA_train",)
+  VAL: ("GQA_val",)
+  TEST: ("GQA_val",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:

@@ -9,7 +9,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt-get update -y \
  && apt-get install -y apt-utils git curl ca-certificates bzip2 cmake tree htop bmon iotop g++ wget \
  && apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx ffmpeg \
- && apt-get install -y --allow-downgrades --allow-change-held-packages libnccl2=2.4.8-1+cuda10.1 libnccl-dev=2.4.8-1+cuda10.1 \
+ && apt-get install -y --allow-downgrades --allow-change-held-packages libnccl2=2.7.3-1+cuda10.1 libnccl-dev=2.7.3-1+cuda10.1 \
  && apt-get clean -y
 
 RUN apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt-get install -y python3-pip
@@ -18,7 +18,7 @@ RUN apt-get update -y
 RUN pip3 install --upgrade pip
 RUN pip3 install scipy h5py ipython ninja yacs cython matplotlib tqdm opencv-python overrides
 
-RUN pip3 install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install torch==1.7.0+cu101 torchvision==0.8.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 
 RUN git clone https://github.com/cocodataset/cocoapi.git && git clone https://github.com/NVIDIA/apex.git && git clone https://github.com/vrdn-23/Scene-Graph-Benchmark.pytorch.git sg_docker
 
