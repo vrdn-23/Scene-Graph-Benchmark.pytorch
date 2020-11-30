@@ -176,7 +176,7 @@ def custom_sgg_post_precessing(predictions):
             bbox.append(xyxy_bbox[i].tolist())
             bbox_labels.append(boxlist.get_field('pred_labels')[i].item())
             bbox_scores.append(boxlist.get_field('pred_scores')[i].item())
-            bbox_attrs.append(boxlist.get_field('pred_attributes')[i].item())
+            bbox_attrs.append(boxlist.get_field('pred_attributes')[i].tolist())
         current_dict['bbox'] = bbox
         current_dict['bbox_labels'] = bbox_labels
         current_dict['bbox_scores'] = bbox_scores
