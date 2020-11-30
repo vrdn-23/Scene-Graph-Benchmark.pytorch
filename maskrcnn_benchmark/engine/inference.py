@@ -160,6 +160,7 @@ def inference(
 
 def custom_sgg_post_precessing(predictions):
     output_dict = {}
+    print(predictions.keys())
     for idx, boxlist in enumerate(predictions):
         xyxy_bbox = boxlist.convert('xyxy').bbox
         # current sgg info

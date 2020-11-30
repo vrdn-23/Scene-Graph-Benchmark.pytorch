@@ -5,14 +5,12 @@ INPUT:
   MAX_SIZE_TEST: 1000
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  WEIGHT: ""
   BACKBONE:
     CONV_BODY: "R-50-FPN" # VGG-16
   RESNETS:
     BACKBONE_OUT_CHANNELS: 256
     STRIDE_IN_1X1: False
-    NUM_GROUPS: 32
-    WIDTH_PER_GROUP: 8
   RELATION_ON: True
   ATTRIBUTE_ON: True
   FLIP_AUG: False            # if there is any left-right relation, FLIP AUG should be false
@@ -68,9 +66,9 @@ MODEL:
     LABEL_SMOOTHING_LOSS: False
     FEATURE_EXTRACTOR: "RelationFeatureExtractor"
     #################### Select Relationship Model ####################
-    #PREDICTOR: "MotifPredictor"
+    PREDICTOR: "MotifPredictor"
     #PREDICTOR: "VCTreePredictor"
-    PREDICTOR: "TransformerPredictor"
+#    PREDICTOR: "TransformerPredictor"
     #PREDICTOR: "CausalAnalysisPredictor"
     ################# Parameters for Motif Predictor ##################
     CONTEXT_OBJ_LAYER: 1
