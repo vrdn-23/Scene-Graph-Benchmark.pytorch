@@ -85,6 +85,7 @@ def main():
     if cfg.MODEL.ATTRIBUTE_ON:
         iou_types = iou_types + ("attributes", )
     output_folders = [None] * len(cfg.DATASETS.TEST)
+    print("iou_types is ", iou_types)
     dataset_names = cfg.DATASETS.TEST
     if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
