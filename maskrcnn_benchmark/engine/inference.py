@@ -171,13 +171,16 @@ def custom_sgg_post_precessing(predictions):
         bbox = []
         bbox_labels = []
         bbox_scores = []
+        bbox_attrs = []
         for i in sortedid:
             bbox.append(xyxy_bbox[i].tolist())
             bbox_labels.append(boxlist.get_field('pred_labels')[i].item())
             bbox_scores.append(boxlist.get_field('pred_scores')[i].item())
+            bbox_attrs.append(boxlist.get_field('pred_attributes')[i].item())
         current_dict['bbox'] = bbox
         current_dict['bbox_labels'] = bbox_labels
         current_dict['bbox_scores'] = bbox_scores
+        current_dict['bbox_attrs'] = bbox_attrs
         # sorted relationships
         rel_sortedid, _ = get_sorted_bbox_mapping(boxlist.get_field('pred_rel_scores')[:,1:].max(1)[0].tolist())
         # sorted rel

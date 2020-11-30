@@ -17,6 +17,7 @@ from . import samplers
 from .collate_batch import BatchCollator, BBoxAugCollator
 from .transforms import build_transforms
 
+
 # by Jiaxin
 def get_dataset_statistics(cfg):
     """
@@ -24,7 +25,7 @@ def get_dataset_statistics(cfg):
     will be called to help construct FrequencyBias module
     """
     logger = logging.getLogger(__name__)
-    logger.info('-'*100)
+    logger.info('-' * 100)
     logger.info('get dataset statistics...')
     paths_catalog = import_file(
         "maskrcnn_benchmark.config.paths_catalog", cfg.PATHS_CATALOG, True
@@ -34,10 +35,10 @@ def get_dataset_statistics(cfg):
 
     data_statistics_name = ''.join(dataset_names) + '_statistics'
     save_file = os.path.join(cfg.OUTPUT_DIR, "{}.cache".format(data_statistics_name))
-    
+
     if os.path.exists(save_file):
         logger.info('Loading data statistics from: ' + str(save_file))
-        logger.info('-'*100)
+        logger.info('-' * 100)
         return torch.load(save_file, map_location=torch.device("cpu"))
 
     statistics = []
@@ -53,12 +54,12 @@ def get_dataset_statistics(cfg):
     result = {
         'fg_matrix': statistics[0]['fg_matrix'],
         'pred_dist': statistics[0]['pred_dist'],
-        'obj_classes': statistics[0]['obj_classes'], # must be exactly same for multiple datasets
+        'obj_classes': statistics[0]['obj_classes'],  # must be exactly same for multiple datasets
         'rel_classes': statistics[0]['rel_classes'],
         'att_classes': statistics[0]['att_classes'],
     }
     logger.info('Save data statistics to: ' + str(save_file))
-    logger.info('-'*100)
+    logger.info('-' * 100)
     torch.save(result, save_file)
     return result
 
@@ -132,7 +133,7 @@ def _compute_aspect_ratios(dataset):
 
 
 def make_batch_data_sampler(
-    dataset, sampler, aspect_grouping, images_per_batch, num_iters=None, start_iter=0
+        dataset, sampler, aspect_grouping, images_per_batch, num_iters=None, start_iter=0
 ):
     if aspect_grouping:
         if not isinstance(aspect_grouping, (list, tuple)):
@@ -160,7 +161,7 @@ def make_data_loader(cfg, mode='train', is_distributed=False, start_iter=0):
     if is_train:
         images_per_batch = cfg.SOLVER.IMS_PER_BATCH
         assert (
-            images_per_batch % num_gpus == 0
+                images_per_batch % num_gpus == 0
         ), "SOLVER.IMS_PER_BATCH ({}) must be divisible by the number of GPUs ({}) used.".format(
             images_per_batch, num_gpus)
         images_per_gpu = images_per_batch // num_gpus
@@ -169,7 +170,7 @@ def make_data_loader(cfg, mode='train', is_distributed=False, start_iter=0):
     else:
         images_per_batch = cfg.TEST.IMS_PER_BATCH
         assert (
-            images_per_batch % num_gpus == 0
+                images_per_batch % num_gpus == 0
         ), "TEST.IMS_PER_BATCH ({}) must be divisible by the number of GPUs ({}) used.".format(
             images_per_batch, num_gpus)
         images_per_gpu = images_per_batch // num_gpus
@@ -239,11 +240,12 @@ def make_data_loader(cfg, mode='train', is_distributed=False, start_iter=0):
             custom_data_info['idx_to_files'] = dataset.custom_files
             custom_data_info['ind_to_classes'] = dataset.ind_to_classes
             custom_data_info['ind_to_predicates'] = dataset.ind_to_predicates
+            custom_data_info['ind_to_attributes'] = dataset.ind_to_attributes
 
             if not os.path.exists(cfg.DETECTED_SGG_DIR):
                 os.makedirs(cfg.DETECTED_SGG_DIR)
 
-            with open(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_data_info.json'), 'w') as outfile:  
+            with open(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_data_info.json'), 'w') as outfile:
                 json.dump(custom_data_info, outfile)
             print('=====> ' + str(os.path.join(cfg.DETECTED_SGG_DIR, 'custom_data_info.json')) + ' SAVED !')
         data_loaders.append(data_loader)
